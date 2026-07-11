@@ -15,8 +15,7 @@ const typeorm_1 = require("typeorm");
 const attendance_status_enum_1 = require("./attendance-status.enum");
 let Attendance = class Attendance {
     id;
-    checkIn;
-    checkOut;
+    time;
     status;
     user;
 };
@@ -31,14 +30,7 @@ __decorate([
         nullable: true,
     }),
     __metadata("design:type", Date)
-], Attendance.prototype, "checkIn", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
-        type: 'timestamp',
-        nullable: true,
-    }),
-    __metadata("design:type", Date)
-], Attendance.prototype, "checkOut", void 0);
+], Attendance.prototype, "time", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: 'enum',

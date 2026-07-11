@@ -71,6 +71,7 @@ let AuthService = class AuthService {
         const accessToken = await this.jwtService.signAsync(payload);
         return {
             accessToken,
+            role: payload.role
         };
     }
 };

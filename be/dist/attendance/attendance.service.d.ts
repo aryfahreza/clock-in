@@ -12,4 +12,9 @@ export declare class AttendanceService {
         code: string;
         message: string;
     }>;
+    getAttendanceStatus(user: User): Promise<{
+        checkIn: Date;
+        checkOut: Date;
+    }>;
+    getAttendanceSummary(user: User): Promise<Attendance[]>;
 }

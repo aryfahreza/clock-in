@@ -1,4 +1,4 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { User } from 'src/users/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard/jwt-auth.guard';
@@ -24,5 +24,19 @@ export class AttendanceController {
   @Roles(Role.USER)
   async checkOut(@Req() req: Request & {user: User}) {
     return this.attendanceService.checkOut(req.user);
+  }
+
+  @Get('attendance-status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.USER)
+  async attendanceStatus(@Req() req: Request & {user: User}) {
+    return this.attendanceService.getAttendanceStatus(req.user);
+  }
+
+  @Get('summary')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.USER)
+  async attendanceSummary(@Req() req: Request & {user: User}) {
+    return this.attendanceService.getAttendanceSummary(req.user);
   }
 }

@@ -1,4 +1,4 @@
 export declare enum AttendanceStatus {
-    CHECKIN = "Check In",
-    CHECKOUT = "Check Out"
+    CHECKIN = "CHECK IN",
+    CHECKOUT = "CHECK OUT"
 }

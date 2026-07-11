@@ -55,4 +55,12 @@ export class UsersService {
             },
         });
     }
+
+    async getProfile(user: User) {
+        return this.userRepository.findOne({
+            where: {
+                id: user.id
+            }
+        })
+    }
 }

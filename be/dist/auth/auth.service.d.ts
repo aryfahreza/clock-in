@@ -7,5 +7,6 @@ export declare class AuthService {
     constructor(userService: UsersService, jwtService: JwtService);
     login(dto: LoginDto): Promise<{
         accessToken: string;
+        role: string;
     }>;
 }

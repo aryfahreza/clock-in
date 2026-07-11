@@ -92,6 +92,13 @@ let UsersService = class UsersService {
             },
         });
     }
+    async getProfile(user) {
+        return this.userRepository.findOne({
+            where: {
+                id: user.id
+            }
+        });
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([

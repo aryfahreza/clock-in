@@ -33,6 +33,7 @@ export class AuthService {
 
         return {
             accessToken,
+            role: payload.role
         };
 
     }

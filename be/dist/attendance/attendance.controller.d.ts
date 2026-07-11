@@ -15,4 +15,13 @@ export declare class AttendanceController {
         code: string;
         message: string;
     }>;
+    attendanceStatus(req: Request & {
+        user: User;
+    }): Promise<{
+        checkIn: Date;
+        checkOut: Date;
+    }>;
+    attendanceSummary(req: Request & {
+        user: User;
+    }): Promise<import("./attendance.entity").Attendance[]>;
 }

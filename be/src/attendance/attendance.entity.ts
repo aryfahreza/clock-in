@@ -12,13 +12,7 @@ export class Attendance {
         type: 'timestamp',
         nullable: true,
     })
-    checkIn!: Date;
-
-    @Column({
-        type: 'timestamp',
-        nullable: true,
-    })
-    checkOut!: Date;
+    time!: Date;
 
     @Column({
         type: 'enum',

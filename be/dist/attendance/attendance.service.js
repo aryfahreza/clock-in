@@ -33,7 +33,7 @@ let AttendanceService = class AttendanceService {
                 user: {
                     id: user.id
                 },
-                checkIn: (0, typeorm_2.Between)(startDt, endDt),
+                time: (0, typeorm_2.Between)(startDt, endDt),
             }
         });
         if (attendance) {
@@ -41,7 +41,7 @@ let AttendanceService = class AttendanceService {
         }
         await this.attendanceRepository.save({
             user: user,
-            checkIn: new Date(),
+            time: new Date(),
             status: attendance_status_enum_1.AttendanceStatus.CHECKIN
         });
         return {
@@ -59,16 +59,19 @@ let AttendanceService = class AttendanceService {
                 user: {
                     id: user.id
                 },
-                checkIn: (0, typeorm_2.Between)(startDt, endDt),
+                time: (0, typeorm_2.Between)(startDt, endDt),
             }
         });
         if (attendance != null) {
             if (attendance.status != null && attendance.status == attendance_status_enum_1.AttendanceStatus.CHECKOUT) {
                 throw new common_1.BadRequestException('User have been checked out today');
             }
-            attendance.checkOut = new Date();
-            attendance.status = attendance_status_enum_1.AttendanceStatus.CHECKOUT;
-            await this.attendanceRepository.save(attendance);
+            const checkOut = {
+                user: user,
+                time: new Date(),
+                status: attendance_status_enum_1.AttendanceStatus.CHECKOUT
+            };
+            await this.attendanceRepository.save(checkOut);
         }
         else {
             throw new common_1.BadRequestException('User have not checked in yet');
@@ -77,6 +80,40 @@ let AttendanceService = class AttendanceService {
             code: '00',
             message: 'SUCCESS'
         };
+    }
+    async getAttendanceStatus(user) {
+        const startDt = new Date();
+        startDt.setHours(0, 0, 0, 0);
+        const endDt = new Date();
+        endDt.setHours(23, 59, 59, 999);
+        const attendance = await this.attendanceRepository.find({
+            where: {
+                user: {
+                    id: user.id
+                },
+                time: (0, typeorm_2.Between)(startDt, endDt),
+            },
+            order: {
+                time: 'ASC',
+            },
+        });
+        return {
+            checkIn: attendance?.[0]?.time || "",
+            checkOut: attendance?.[1]?.time || "",
+        };
+    }
+    async getAttendanceSummary(user) {
+        const attendance = this.attendanceRepository.find({
+            where: {
+                user: {
+                    id: user.id
+                }
+            },
+            order: {
+                time: 'DESC',
+            }
+        });
+        return attendance;
     }
 };
 exports.AttendanceService = AttendanceService;

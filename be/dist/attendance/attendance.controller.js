@@ -30,6 +30,12 @@ let AttendanceController = class AttendanceController {
     async checkOut(req) {
         return this.attendanceService.checkOut(req.user);
     }
+    async attendanceStatus(req) {
+        return this.attendanceService.getAttendanceStatus(req.user);
+    }
+    async attendanceSummary(req) {
+        return this.attendanceService.getAttendanceSummary(req.user);
+    }
 };
 exports.AttendanceController = AttendanceController;
 __decorate([
@@ -50,6 +56,24 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AttendanceController.prototype, "checkOut", null);
+__decorate([
+    (0, common_1.Get)('attendance-status'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.USER),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AttendanceController.prototype, "attendanceStatus", null);
+__decorate([
+    (0, common_1.Get)('summary'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(role_enum_1.Role.USER),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AttendanceController.prototype, "attendanceSummary", null);
 exports.AttendanceController = AttendanceController = __decorate([
     (0, common_1.Controller)('attendance'),
     __metadata("design:paramtypes", [attendance_service_1.AttendanceService])

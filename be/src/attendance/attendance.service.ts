@@ -4,6 +4,7 @@ import { Between, Repository } from 'typeorm';
 import { Attendance } from './attendance.entity';
 import { User } from 'src/users/user.entity';
 import { AttendanceStatus } from './attendance-status.enum';
+import { time } from 'console';
 
 @Injectable()
 export class AttendanceService {
@@ -25,7 +26,7 @@ export class AttendanceService {
                 user: {
                     id: user.id
                 },
-                checkIn: Between(startDt, endDt),
+                time: Between(startDt, endDt),
             }
         });
 
@@ -35,7 +36,7 @@ export class AttendanceService {
 
         await this.attendanceRepository.save({
             user: user,
-            checkIn: new Date(),
+            time: new Date(),
             status: AttendanceStatus.CHECKIN
         });
 
@@ -57,7 +58,7 @@ export class AttendanceService {
                 user: {
                     id: user.id
                 },
-                checkIn: Between(startDt, endDt),
+                time: Between(startDt, endDt),
             }
         });
 
@@ -66,10 +67,13 @@ export class AttendanceService {
                 throw new BadRequestException('User have been checked out today');
             }
 
-            attendance.checkOut = new Date();
-            attendance.status = AttendanceStatus.CHECKOUT
-
-            await this.attendanceRepository.save(attendance);
+            const checkOut = {
+                user: user,
+                time: new Date(),
+                status: AttendanceStatus.CHECKOUT
+            }
+            
+            await this.attendanceRepository.save(checkOut);
         } else {
             throw new BadRequestException('User have not checked in yet');
         }
@@ -78,5 +82,45 @@ export class AttendanceService {
             code: '00',
             message: 'SUCCESS'
         } 
+    }
+
+    async getAttendanceStatus(user: User) {
+        const startDt = new Date();
+        startDt.setHours(0, 0, 0, 0,);
+
+        const endDt = new Date();
+        endDt.setHours(23, 59, 59, 999);
+
+        const attendance = await this.attendanceRepository.find({
+            where: {
+                user: {
+                    id: user.id
+                },
+                time: Between(startDt, endDt),
+            },
+            order: {
+                time: 'ASC',
+            },
+        });
+
+        return {
+            checkIn: attendance?.[0]?.time||"",
+            checkOut: attendance?.[1]?.time||"",
+        }
+    }
+
+    async getAttendanceSummary(user: User) {
+        const attendance = this.attendanceRepository.find({
+            where: {
+                user: {
+                    id: user.id
+                }
+            },
+            order: {
+                time: 'DESC',
+            }
+        })
+
+        return attendance;
     }
 }
