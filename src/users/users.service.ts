@@ -4,6 +4,7 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
+import { Role } from './role.enum';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +15,11 @@ export class UsersService {
     ) {}
 
     findAll() {
-        return this.userRepository.find();
+        return this.userRepository.find({
+            where: {
+                role: Role.USER,
+            },
+        });
     }
 
     async createUser(dto: CreateUserDto) {
