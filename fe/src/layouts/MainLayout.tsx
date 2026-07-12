@@ -10,7 +10,7 @@ export default function MainLayout() {
     const menuItems = [
         { name: "Dashboard", href: "/dashboard", icon: Home },
         { name: "Profile", href: "/profile", icon: User },
-        { name: "Attendance Log", href: "/attendance", icon: ClipboardList },
+        // { name: "Attendance Log", href: "/attendance", icon: ClipboardList },
     ];
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -41,7 +41,7 @@ export default function MainLayout() {
                             <div className="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">
                                 JD
                             </div>
-                            <span className="text-sm font-semibold text-slate-700 hidden sm:inline">John Doe</span>
+                            <span className="text-sm font-semibold text-slate-700 hidden sm:inline">{sessionStorage.getItem('name')}</span>
                             <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
                         </button>
 

@@ -11,7 +11,16 @@ type AttendanceLog = {
     status: "Masuk" | "Pulang";
 };
 
+type Profile = {
+    name: string;
+    email: string;
+    position: string;
+    phone: string;
+    photoUrl: string
+};
+
 export default function Home() {
+    const [profile, setProfile] = useState<Profile>();
     const todayStr = "2026-07-08";
 
     const [todayRecords, setTodayRecords] = useState<{ masuk?: string; pulang?: string }>({});
@@ -89,14 +98,29 @@ export default function Home() {
         }
     }
 
+    const handleFetchProfile = async () => {
+        try {
+            const response = await axios.get("http://localhost:3000/users/profile", {
+                headers: {
+                    Authorization: "Bearer " + sessionStorage.getItem("token")
+                }
+            });
+
+            sessionStorage.setItem('name', response.data.name)
+        } catch (error) {
+            console.log("Error ", error);
+        }
+    }
+
     useEffect(() => {
         fetchAttendanceStatus();
         fetchAttendanceSummary();
+        handleFetchProfile();
     }, [])
 
     return (
         <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold text-slate-900">Hello, John Doe!</h1>
+            <h1 className="text-2xl font-bold text-slate-900">Hello, {sessionStorage.getItem('name')}</h1>
 
             <div className="card flex flex-col gap-4">
                 <div className="text-sm font-semibold text-slate-700">
